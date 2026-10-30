@@ -15,4 +15,4 @@ System architecture
 2. Preprocessing: the backend extracts frames at a set FPS and isolates facial regions with face detection. Crops are expanded slightly and resized (for example, 224×224). Frames with no detected face are skipped and counted.
 3. Inference: cropped faces are fed into the pretrained deep learning model (spatial branch per frame, temporal branch over the frame sequence).
 4. Aggregation: per-frame confidence scores are combined (mean, trimmed mean or top-k mean) into a final classification.
-5. Output: the backend returns the Real/Fake verdict, the confidence, a per-frame score plot and visual heatmaps.
+5. Output: the backend returns the Real/Fake verdict, the confidence, a per-frame score plot.
