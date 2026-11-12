@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRIS - Technology</title>
+    <link rel="icon" href="../assets/images/download (4).jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styled.css">
+</head>
+<body>
+    <!-- nav , logo -->
+    <main class="rs">
+        <nav class="resource-nav-links" aria-label="Main">
+            <a href="../index.html">Home</a>
+            <a href="./tech.html">Technology</a>
+            <a href="./resource.html">Resources</a>
+            <a href="./about_us.html">About Us</a>
+        </nav>
+
+        <header class="logo">
+            <a href="../index.html">
+                <img src="../assets/images/download (4).jpg" alt="IRIS logo" width="72" height="72">
+                <span>IRIS</span>
+            </a>
+            <hr>
+        </header>
+
+        <article class="tp-page">
+            <header class="tp-hero">
+                <h1>The technology behind IRIS</h1>
+                <p>IRIS is a hybrid spatial-temporal deepfake detector. One network studies each face frame for pixel-level mistakes, and a second one watches how those frames change over time. Together they give a verdict, a confidence score and a heatmap of what looks wrong.</p>
+            </header>
+
+            <!-- info cards -->
+            <section class="tp-sect" aria-labelledby="pipeline-title">
+                <h2 class="sect-title" id="pipeline-title">From upload to verdict</h2>
+                <ol class="tp-flow">
+                    <li>
+                        <h3>Upload</h3>
+                        <p>You send a video or image through the web interface.</p>
+                    </li>
+                    <li>
+                        <h3>Frame extraction</h3>
+                        <p>The video is split into frames at a fixed rate.</p>
+                        <span class="tp-chip">OpenCV</span>
+                    </li>
+                    <li>
+                        <h3>Face detection</h3>
+                        <p>A face is located in every frame. Frames without a face are skipped and counted.</p>
+                        <span class="tp-chip">MediaPipe</span>
+                    </li>
+                    <li>
+                        <h3>Crop and align</h3>
+                        <p>The face is cut out, the background is dropped and each crop is resized (for example 224 × 224).</p>
+                        <span class="tp-chip">OpenCV</span>
+                    </li>
+                    <li>
+                        <h3>Spatial analysis</h3>
+                        <p>A CNN turns each face crop into a feature vector that captures blending, texture and lighting.</p>
+                        <span class="tp-chip">ResNeXt</span>
+                    </li>
+                    <li>
+                        <h3>Temporal analysis</h3>
+                        <p>A recurrent network reads the vectors in order and looks for jitter and unnatural motion.</p>
+                        <span class="tp-chip">LSTM</span>
+                    </li>
+                    <li>
+                        <h3>Aggregation</h3>
+                        <p>Per-frame scores are combined into one score using a mean, trimmed mean or top-k mean.</p>
+                    </li>
+                    <li>
+                        <h3>Verdict</h3>
+                        <p>You get Real or Fake, a confidence value, a per-frame score plot and heatmaps.</p>
+                        <span class="tp-chip">Grad-CAM</span>
+                    </li>
+                </ol>
+            </section>
+
+            <section class="tp-sect" aria-labelledby="model-title">
+                <h2 class="sect-title" id="model-title">The detection model</h2>
+                <div class="tp-split">
+                    <div class="tp-card">
+                        <h3>Spatial branch: ResNeXt CNN</h3>
+                        <p>A pretrained ResNeXt is fine-tuned on face crops. It splits each block into many parallel paths (its cardinality), which gives stronger features at a similar cost. It catches blurred jawline boundaries, checkerboard artifacts and mismatched lighting.</p>
+                        <div class="tp-chips"><span class="tp-chip">ResNeXt</span><span class="tp-chip">Fine-tuning</span><span class="tp-chip">Grad-CAM heatmaps</span></div>
+                    </div>
+                    <div class="tp-card">
+                        <h3>Temporal branch: LSTM / GRU</h3>
+                        <p>A recurrent network with gated memory reads the frame features in sequence. It exposes flickering, temporal jitter and lip or eye movement that does not follow natural human mechanics, which single-frame classifiers cannot see.</p>
+                        <div class="tp-chips"><span class="tp-chip">LSTM</span><span class="tp-chip">GRU</span><span class="tp-chip">RNN</span></div>
+                    </div>
+                    <div class="tp-card tp-wide">
+                        <h3>Lightweight variant</h3>
+                        <p>For faster inference, the CNN can be swapped for a smaller backbone. This variant pairs a pretrained MobileNetV2 with first-order temporal differencing (Δx), which isolates frame-to-frame change, and a GRU for the sequence. EfficientNet, Xception and ViT backbones are also supported for fine-tuning.</p>
+                        <div class="tp-chips"><span class="tp-chip">MobileNetV2</span><span class="tp-chip">Temporal differencing (Δx)</span><span class="tp-chip">GRU</span><span class="tp-chip">EfficientNet</span><span class="tp-chip">Xception</span><span class="tp-chip">ViT</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- table -->
+            <section class="tp-sect" aria-labelledby="stack-title">
+                <h2 class="sect-title" id="stack-title">Technology stack</h2>
+                <div class="tp-table-wrap">
+                    <table class="tp-table">
+                        <thead>
+                            <tr><th scope="col">Layer</th><th scope="col">Technology</th><th scope="col">What it does in IRIS</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><th scope="row">AI / ML</th><td>Python, PyTorch or TensorFlow</td><td>Training and inference</td></tr>
+                            <tr><th scope="row">Computer vision</th><td>OpenCV, MediaPipe</td><td>Frame extraction, face detection, bounding-box alignment</td></tr>
+                            <tr><th scope="row">Spatial model</th><td>ResNeXt (or MobileNetV2, EfficientNet)</td><td>Per-frame feature extraction</td></tr>
+                            <tr><th scope="row">Temporal model</th><td>LSTM or GRU</td><td>Sequence modelling across frames</td></tr>
+                            <tr><th scope="row">Explainability</th><td>Grad-CAM heatmaps, per-frame confidence plot</td><td>Shows which regions and moments drove the verdict</td></tr>
+                            <tr><th scope="row">Backend and API</th><td>FastAPI, Celery or Redis Queue</td><td>Asynchronous video processing and job queue</td></tr>
+                            <tr><th scope="row">Frontend</th><td>HTML5, CSS3, JavaScript</td><td>Dashboard for uploads and results</td></tr>
+                            <tr><th scope="row">Deployment</th><td>Docker on cloud GPU instances</td><td>Containerisation and horizontal scaling</td></tr>
+                            <tr><th scope="row">Optimisation</th><td>FP16 mixed precision, ONNX / TorchScript, batching, result caching</td><td>Faster inference at scale</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- info cards -->
+            <section class="tp-sect" aria-labelledby="train-title">
+                <h2 class="sect-title" id="train-title">Training and evaluation</h2>
+                <div class="tp-trio">
+                    <div class="tp-card">
+                        <h3>Data</h3>
+                        <p>Subsets of three datasets. Splits are made per video, so frames from one video never appear in both training and test sets.</p>
+                        <div class="tp-chips"><span class="tp-chip">FaceForensics++</span><span class="tp-chip">DFDC sample</span><span class="tp-chip">Deepfake-Eval-2024</span></div>
+                    </div>
+                    <div class="tp-card">
+                        <h3>Training</h3>
+                        <p>A pretrained backbone is fine-tuned with binary cross-entropy and the Adam optimiser. Augmentation imitates real-world quality loss.</p>
+                        <div class="tp-chips"><span class="tp-chip">Flips</span><span class="tp-chip">JPEG compression</span><span class="tp-chip">Blur</span><span class="tp-chip">Noise</span><span class="tp-chip">Colour jitter</span></div>
+                    </div>
+                    <div class="tp-card">
+                        <h3>Evaluation</h3>
+                        <p>ROC-AUC is the headline metric. IRIS also reports a cross-dataset test and a re-encoding test to show how well it handles unseen data.</p>
+                        <div class="tp-chips"><span class="tp-chip">AUC</span><span class="tp-chip">Precision</span><span class="tp-chip">Recall</span><span class="tp-chip">F1</span><span class="tp-chip">Confusion matrix</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="tp-note">
+                <h3>A decision aid, not a final judge</h3>
+                <p>When too few frames contain a clear face, IRIS answers "insufficient evidence" instead of guessing. It returns a probability, not a certainty, and it works best on the kinds of manipulation it was trained on.</p>
+            </aside>
+        </article>
+    </main>
+
+    <!-- footer section -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a class="footer-logo" href="../index.html" aria-label="IRIS home">
+                        <img src="../assets/images/download (4).jpg" alt="" width="35" height="35">
+                        <span>IRIS</span>
+                    </a>
+                    <p class="footer-tagline">See the truth behind every pixel.</p>
+                    <p class="footer-about">An AI-powered deepfake detector that checks images and videos in seconds, so you know what's real and what's fake.</p>
+                    <a class="footer-cta" href="./main.html">Detect</a>
+                </div>
+
+                <nav class="footer-col" aria-label="Footer navigation">
+                    <h2>Explore</h2>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="./tech.html">Technology</a></li>
+                        <li><a href="./resource.html">Resources</a></li>
+                        <li><a href="./about_us.html">About Us</a></li>
+                    </ul>
+                </nav>
+
+                <nav class="footer-col" aria-label="Footer resources">
+                    <h2>Learn</h2>
+                    <ul>
+                        <li><a href="./resource.html#news">News</a></li>
+                        <li><a href="./resource.html#research">Research</a></li>
+                        <li><a href="./resource.html#blogs">Blogs</a></li>
+                        <li><a href="./resource.html#case-studies">Case studies</a></li>
+                    </ul>
+                </nav>
+
+                <div class="footer-col">
+                    <h2>Connect</h2>
+                    <ul>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="./about_us.html">Contact us</a></li>
+                        <li><a href="./about_us.html">Our team</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <p class="footer-stack">Built with MediaPipe, OpenCV, ResNeXt and LSTM/GRU networks.</p>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 IRIS. All rights reserved.</p>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-wordmark" aria-hidden="true">IRIS</div>
+        </div>
+    </footer>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>

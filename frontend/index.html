@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRIS - DeepFake detection system</title>
+    <link rel="icon" href="./assets/images/download (4).jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/styled.css">
+</head>
+<body>
+    <main>
+        <!-- Navigation -->
+        <nav class="nav-links" aria-label="Main">
+            <a href="index.html">Home</a>
+            <a href="./pages/tech.html">Technology</a>
+            <a href="./pages/resource.html">Resources</a>
+            <a href="./pages/about_us.html">About Us</a>
+        </nav>
+        <!-- background gradient -->
+        <section class="land">
+            <div class="bg">
+                <span class="ellipse e1"></span>
+                <span class="ellipse e2"></span>
+                <span class="ellipse e3"></span>
+                <span class="ellipse e4"></span>
+                <span class="ellipse e5"></span>
+                <span class="ellipse e6"></span>
+            </div>
+
+            <div class="content">
+                <!-- logo & detect button-->
+                <div class="logo">
+                    <a href="./index.html">
+                        <img src="./assets/images/download (4).jpg" alt="IRIS Logo" width="50" height="50">
+                        <h1>IRIS</h1>
+                    </a>
+                </div>
+
+                <div class="cta">
+                    <a href="./pages/main.html">Detect</a>
+                </div>
+
+                <header>
+                    <div class="hook">
+                        <h1 class="hook-head"><span class = 'line-one'>See the <span class="hook-span">truth</span></span> <span class = 'line-two'>behind every pixel<span class="hook-span">.</span></span></h1>
+                        <hr>
+                        <p>Iris is an AI-powered deepfake detector that checks images and videos in seconds, so you know what’s real and what’s fake.</p>
+                        <a href="./pages/main.html">Detect</a>
+                    </div>
+                    <!-- put an image here please -->
+                    <div class="images1">
+                        
+                    </div>
+                </header>
+            </div>
+        </section>
+        <section class = 'transition-1'>
+            <h2> you can’t trust your <span>eyes</span> anymore, so you need a tool.</h2>
+            <p><b>Humans identify deepfakes with only about 55% accuracy,barely better than a coin flip.</b></p>
+        </section>
+        <!-- problem section -->
+        <article>
+            <section class="problem">
+                <h1 class="the-problem">The Problem</h1>
+                <div class = 'problems'>
+                    <h2>High-Stakes Financial Fraud and Corporate Cybercrime</h2>
+                    <p><b>Deepfakes are actively weaponized to bypass corporate security and trick employees into authorizing massive wire transfers through highly convincing executive impersonation.</b></p>
+                </div>
+                <div class = 'problems'>
+                    <h2>Political Manipulation and Election Sabotage</h2>
+                    <p><b>AI audio and video clones are deployed strategically during critical voting periods to spread disinformation, suppress voter turnout, or damage political opponents when they have no time to respond.</b></p>
+                </div>
+                <div class = 'problems'>
+                    <h2>Weaponization in Geopolitical Conflicts and Propaganda</h2>
+                    <p><b>State-sponsored actors and independent syndicates use synthetic media to undermine military morale, spread war propaganda, and discredit international figures on the global stage.</b></p>
+                </div>
+                <div class = 'problems'>
+                    <h2>Non-Consensual Imagery and Celebrity Defamation</h2>
+                    <p><b>The widespread availability of open-source and commercial AI generation tools has led to a massive surge in non-consensual explicit content and unauthorized endorsements featuring public figures.</b></p>
+                </div>
+            </section>
+            
+        </article>
+        <!-- quize section -->
+        <section class="quiz" id="quiz" aria-labelledby="quiz-title">
+                <h2 class="quiz-title" id="quiz-title">Can you <span>spot</span> the real one<span>?</span></h2>
+                <p class="quiz-sub">One of these images is real and the other is AI-generated. Tap the one you think is real.</p>
+
+                <!-- Two choices. Put data-correct="true" on the card that holds the REAL image. -->
+                <div class="quiz-round" id="quiz-round">
+                    <button type="button" class="quiz-card" data-correct="true">
+                        <!-- replace this image with our image -->
+                        <img src="./assets/images/pexels-marstion-3495966-10875411.jpg" alt="Image A">
+                        <span class="quiz-label">Image A</span>
+                    </button>
+
+                    <button type="button" class="quiz-card" data-correct="false">
+                        <img src="./assets/images/pexels-marstion-3495966-10875411.jpg" alt="Image B">
+                        <span class="quiz-label">Image B</span>
+                    </button>
+                </div>
+
+                <!-- Result panels: hidden until the user picks an image -->
+                <div class="quiz-feedback quiz-feedback--correct" id="quiz-correct" role="status" hidden>
+                    <h3>Correct!</h3>
+                    <p>Nice eye ! IRIS detects DeepFakes with the same accuracy but way faster.</p>
+                </div>
+
+                <div class="quiz-feedback quiz-feedback--wrong" id="quiz-wrong" role="status" hidden>
+                    <h3>Not quite.</h3>
+                    <p>Nice try ! It's difficult for humans to detect with good accuracy . That's where IRIS comes , it detects DeepFakes with great accuracy and is as quick as flash !</p>
+                </div>
+
+                <button type="button" class="quiz-next" id="quiz-next" hidden>Try another round</button>
+                <a href="./pages/main.html" hidden>Detect</a>
+        </section>
+
+        <!-- technology section -->
+        <article class="tech">
+            <section class="technology">
+                <h2>how do we <span>detect</span> ...</h2>
+                <p class="tech-intro">IRIS uses MediaPipe and OpenCV with a ResNeXt CNN and an RNN to accurately detect blending boundaries, lighting mismatches and texture inconsistencies.</p>
+
+                <ul class="stack">
+                    <li>
+                        <h3>Facial Bounding &amp; Alignment</h3>
+                        <p>Employs MediaPipe and OpenCV to isolate and align face crops (e.g., 224 × 224 pixels) while discarding background regions to eliminate background shortcut learning.</p>
+                    </li>
+                    <li>
+                        <h3>Spatial Feature Extraction</h3>
+                        <p>Utilizes a ResNeXt CNN (with parallel cardinality paths) or a lightweight backbone like MobileNetV2 / EfficientNet to analyze per-frame pixel artifacts.</p>
+                    </li>
+                    <li>
+                        <h3>Temporal Modeling</h3>
+                        <p>Utilizes a Recurrent Neural Network (LSTM or GRU) to capture inter-frame motion, exposing temporal jitter, flickering, and unnatural lip/eye dynamics across sequential frames.</p>
+                    </li>
+                    <li>
+                        <h3>Temporal Confidence Graphing</h3>
+                        <p>Generates per-frame confidence scores to visualize exactly where and when inconsistencies occur across the timeline.</p>
+                    </li>
+                </ul>
+
+                <p class="tech-more">wanna know more ?</p>
+                <a class="tech-link" href="./pages/tech.html">our tech</a>
+            </section>
+        </article>
+        <!-- resource section -->
+        <article class = "resources-section">
+            <h1>expand your knowlegde with ...</h1>
+            <p class="desc">News , Case-studies , reports and blogs provide you a better understanding of the big threat of AI DeepFakes , regarding solutions and measures to address this big challenge in the new gen .</p>
+            <div class="resources">
+                    <ul class="resource-card">
+                        <li>
+                            <h3>news</h3>
+                            <a href="./pages/resource.html#news"><img src="./assets/images/pexels-marstion-3495966-10875411.jpg" alt="News image" width="200" height="345"></a>
+                            <p>about news 1</p>
+                        </li>
+                    </ul>
+                    <ul class="resource-card">
+                        <li>
+                            <h3>research</h3>
+                            <a href="./pages/resource.html#research"><img src="./assets/images/pexels-marstion-3495966-10875411.jpg" alt="Research image" width="200" height="345"></a>
+                            <p>about research 1</p>
+                        </li>
+                    </ul>
+                    <ul class="resource-card">
+                        <li>
+                            <h3>blogs</h3>
+                            <a href="./pages/resource.html#blogs"><img src="./assets/images/pexels-marstion-3495966-10875411.jpg" alt="Blogs image" width="200" height="345"></a>
+                            <p>about blogs 1</p>
+                        </li>
+                    </ul>
+                    <ul class="resource-card">
+                        <li>
+                            <h3>case-studies</h3>
+                            <a href="./pages/resource.html#case-studies"><img src="./assets/images/pexels-marstion-3495966-10875411.jpg" alt="Case studies image" width="200" height="345"></a>
+                            <p>about case studies</p>
+                        </li>
+                    </ul>
+            </div>
+                <a href="./pages/resource.html" class="mr">more resources</a>
+        </article>
+    <!-- footer section  -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <!-- logo and description -->
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a class="footer-logo" href="./index.html" aria-label="IRIS home">
+                        <img src="./assets/images/download (4).jpg" alt="" width="35" height="35">
+                        <span>IRIS</span>
+                    </a>
+                    <p class="footer-tagline">See the truth behind every pixel.</p>
+                    <p class="footer-about">An AI-powered deepfake detector that checks images and videos in seconds, so you know what's real and what's fake.</p>
+                    <a class="footer-cta" href="./pages/main.html">Detect</a>
+                </div>
+                <!-- links -->
+                <nav class="footer-col" aria-label="Footer navigation">
+                    <h2>Explore</h2>
+                    <ul>
+                        <li><a href="./index.html">Home</a></li>
+                        <li><a href="./pages/tech.html">Technology</a></li>
+                        <li><a href="./pages/resource.html">Resources</a></li>
+                        <li><a href="./pages/about_us.html">About Us</a></li>
+                    </ul>
+                </nav>
+                <!-- please link them with the resource section's sub sections directly -->
+                <nav class="footer-col" aria-label="Footer resources">
+                    <h2>Learn</h2>
+                    <ul>
+                        <li><a href="./pages/resource.html#news">News</a></li>
+                        <li><a href="./pages/resource.html#research">Research</a></li>
+                        <li><a href="./pages/resource.html#blogs">Blogs</a></li>
+                        <li><a href="./pages/resource.html#case-studies">Case studies</a></li>
+                    </ul>
+                </nav>
+                <!-- socials link -->
+                <div class="footer-col">
+                    <h2>Connect</h2>
+                    <ul>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="./pages/about_us.html">Contact us</a></li>
+                        <li><a href="./pages/about_us.html">Our team</a></li>
+                    </ul>
+                </div>
+            </div>
+    
+            <p class="footer-stack">Built with MediaPipe, OpenCV, ResNeXt and LSTM/GRU networks.</p>
+    
+            <div class="footer-bottom">
+                <p>&copy; 2026 IRIS. All rights reserved.</p>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-wordmark" aria-hidden="true">IRIS</div>
+        </div>
+    </footer>
+
+    <script src="./js/quiz.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
