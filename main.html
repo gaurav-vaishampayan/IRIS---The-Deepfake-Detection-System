@@ -1,0 +1,148 @@
+<!-- this is the page where we'll allow user to post their image and get results -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRIS - Detect DeepFakes</title>
+    <link rel="icon" href="E:\M. Tech AI&DS\IRIS frontend\images\download (4).jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="E:\M. Tech AI&DS\IRIS frontend\stylesheet\styled.css">
+</head>
+<body>
+    <main>
+        <!-- navigation -->
+        <nav class="nav-links nav-right" aria-label="Main">
+            <a href="landing_page.html">Home</a>
+            <a href="tech.html">Technology</a>
+            <a href="resource.html">Resources</a>
+            <a href="about_us.html">About Us</a>
+        </nav>
+       
+        <section class="main-hero">
+             <!-- background gradient -->
+            <div class="bg">
+                <span class="ellipse e1"></span>
+                <span class="ellipse e2"></span>
+                <span class="ellipse e3"></span>
+                <span class="ellipse e4"></span>
+                <span class="ellipse e5"></span>
+                <span class="ellipse e6"></span>
+            </div>
+            <!-- logo -->
+            <div class="content">
+                <div class="logo">
+                    <a href="landing_page.html">
+                        <img src="E:\M. Tech AI&DS\IRIS frontend\images\download (4).jpg" alt="IRIS Logo" width="72" height="72">
+                        <span>IRIS</span>
+                    </a>
+                </div>
+                <hr class="main-rule">
+ 
+                <header class="main-intro">
+                    <h1>Is that video <span>real?</span></h1>
+                    <p>Upload any video and Iris checks it for signs of deepfake manipulation. You get a clear verdict in seconds.</p>
+                </header>
+                <!-- upload section -->
+                <div class="main-upload">
+                    <form class="upload-col" id="upload-form">
+                        <label class="dropzone" id="dropzone">
+                            <input type="file" id="video" name="video" accept="video/*" aria-label="Choose a video to upload">
+                            <span class="upload-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.5a4.25 4.25 0 0 1 .5 8.5H7z" fill="#a9d6f5"/>
+                                    <path d="M12 16v-5M9.5 13.2 12 10.7l2.5 2.5" fill="none" stroke="#2f86c6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                            <span class="file-name" id="file-name"></span>
+                        </label>
+                        <button type="submit" class="upload-btn" id="upload-btn" disabled>Upload</button>
+                    </form>
+ 
+                    <div class="howto-card">
+                        <p>screenshots of how to upload images</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- result section : hidden -->
+        <section class="results" id="results" aria-labelledby="results-title" hidden>
+            <h2 class="results-title" id="results-title">Results</h2>
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3>Verdict</h3>
+                    <p id="verdict">The verdict for your video will appear here.</p>
+                </div>
+                <div class="result-card">
+                    <h3>Confidence over time</h3>
+                    <p id="confidence-graph">A frame-by-frame confidence graph will appear here.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- footer section -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+ 
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a class="footer-logo" href="landing_page.html" aria-label="IRIS home">
+                        <img src="E:\M. Tech AI&DS\IRIS frontend\images\download (4).jpg" alt="" width="35" height="35">
+                        <span>IRIS</span>
+                    </a>
+                    <p class="footer-tagline">See the truth behind every pixel.</p>
+                    <p class="footer-about">An AI-powered deepfake detector that checks images and videos in seconds, so you know what's real and what's fake.</p>                    
+                </div>
+ 
+                <nav class="footer-col" aria-label="Footer navigation">
+                    <h2>Explore</h2>
+                    <ul>
+                        <li><a href="landing_page.html">Home</a></li>
+                        <li><a href="tech.html">Technology</a></li>
+                        <li><a href="resource.html">Resources</a></li>
+                        <li><a href="about_us.html">About Us</a></li>
+                    </ul>
+                </nav>
+                <!-- link it -->
+                <nav class="footer-col" aria-label="Footer resources">
+                    <h2>Learn</h2>
+                    <ul>
+                        <li><a href="#">News</a></li>
+                        <li><a href="#">Research</a></li>
+                        <li><a href="#">Blogs</a></li>
+                        <li><a href="#">Case studies</a></li>
+                    </ul>
+                </nav>
+                <!-- social links -->
+                <div class="footer-col">
+                    <h2>Connect</h2>
+                    <ul>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Contact us</a></li>
+                        <li><a href="#">Our team</a></li>
+                    </ul>
+                </div>
+            </div>
+ 
+            <p class="footer-stack">Built with MediaPipe, OpenCV, ResNeXt and LSTM/GRU networks.</p>
+ 
+            <div class="footer-bottom">
+                <p>&copy; 2026 IRIS. All rights reserved.</p>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                </ul>
+            </div>
+ 
+            <div class="footer-wordmark" aria-hidden="true">IRIS</div>
+        </div>
+    </footer>
+ 
+    
+</body>
+</html>
