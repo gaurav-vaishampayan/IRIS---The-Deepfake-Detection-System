@@ -31,7 +31,14 @@
                 <span class="ellipse e5"></span>
                 <span class="ellipse e6"></span>
             </div>
+            <!-- Results Section required by app.js -->
+<section id="results" hidden style="margin-top: 30px; padding: 20px; background: #1e1e1e; border-radius: 12px; color: #fff; text-align: center;">
+    <h2>Analysis Results</h2>
+    <p id="verdict" style="font-size: 1.5rem; font-weight: bold; margin: 15px 0;"></p>
+    <p id="confidence-graph" style="font-size: 1rem; color: #aaa;"></p>
+</section>
 
+     
             <!-- logo -->
             <div class="content">
                 <div class="logo">
@@ -69,21 +76,17 @@
                 </div>
             </div>
         </section>
+        <section class="results" id="results" aria-labelledby="results-title" hidden>
+    <h2 class="results-title" id="results-title">Results</h2>
+    <div class="results-grid">
+        <p id="verdict">Extracting frames and analyzing facial features...</p>
+        <p id="confidence-graph">Waiting for model scores...</p>
+    </div>
+</section>
 
         <!-- result section : hidden -->
-        <section class="results" id="results" aria-labelledby="results-title" hidden>
-            <h2 class="results-title" id="results-title">Results</h2>
-            <div class="results-grid">
-                <div class="result-card">
-                    <h3>Verdict</h3>
-                    <p id="verdict">The verdict for your video will appear here.</p>
-                </div>
-                <div class="result-card">
-                    <h3>Confidence over time</h3>
-                    <p id="confidence-graph">A frame-by-frame confidence graph will appear here.</p>
-                </div>
-            </div>
-        </section>
+        <!-- result section : hidden -->
+
     </main>
 
     <!-- footer section -->
