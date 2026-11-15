@@ -12,9 +12,9 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"🔍 Target Model Path: {WEIGHTS_PATH}")
 if WEIGHTS_PATH.exists():
     file_size_mb = WEIGHTS_PATH.stat().st_size / (1024 * 1024)
-    print(f"📂 Weights File Size: {file_size_mb:.2f} MB")
+    print(f" Weights File Size: {file_size_mb:.2f} MB")
 else:
-    print("❌ Weights file not found!")
+    print(" Weights file not found!")
 
 
 class EfficientNetDeepfakeDetector(nn.Module):
@@ -54,11 +54,11 @@ if WEIGHTS_PATH.exists() and WEIGHTS_PATH.stat().st_size > 1000000:
 
         model_dict.update(matched_dict)
         model.load_state_dict(model_dict, strict=False)
-        print(f"✅ Successfully loaded checkpoint weights ({len(matched_dict)} layers matched)!")
+        print(f" Successfully loaded checkpoint weights ({len(matched_dict)} layers matched)!")
     except Exception as e:
-        print(f"⚠️ Error loading PyTorch weights: {e}")
+        print(f" Error loading PyTorch weights: {e}")
 else:
-    print("⚠️ WARNING: Weights file missing or invalid!")
+    print("WARNING: Weights file missing or invalid!")
 
 model.eval()
 
