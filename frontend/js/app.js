@@ -11,9 +11,7 @@ async function request(path, options = {}) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // =========================================================
-    // 1. DEEPFAKE DETECTION UPLOAD (runs only on pages/main.html)
-    // =========================================================
+   //upload
     const uploadForm = document.getElementById("upload-form");
     const dropzone = document.getElementById("dropzone");
     const videoInput = document.getElementById("video");
@@ -92,6 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         : "";
 
                 verdictOutput.textContent = `${verdict}${confidence}`;
+                
+                // Automatically scroll down smoothly to the results section
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
 
                 if (Array.isArray(data.frame_scores) && data.frame_scores.length > 0) {
                     confidenceOutput.textContent =
@@ -114,9 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // =========================================================
-    // 2. SPOT-THE-REAL-ONE QUIZ (runs only on index.html)
-    // =========================================================
+  //quiz
     const quizRound = document.getElementById("quiz-round");
     const quizCorrect = document.getElementById("quiz-correct");
     const quizWrong = document.getElementById("quiz-wrong");
