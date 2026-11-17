@@ -76,9 +76,8 @@ async def predict_endpoint(video: UploadFile = File(...)):
         saved_video_path = UPLOAD_DIR / saved_video_name
         shutil.copy2(tmp_path, saved_video_path)
 
-        # Normalize fields so frontend and poster always have consistent keys
         prediction = str(result.get("prediction") or result.get("verdict") or "REAL").upper()
-        fake_prob = float(result.get("fake_probability", result.get("confidence", 0.0) if prediction == "FAKE" else 0.0))
+        fake_prob = float(result.get("fake_probability", 0.0))
         real_prob = float(result.get("real_probability", 1.0 - fake_prob))
 
         record = {
@@ -91,8 +90,7 @@ async def predict_endpoint(video: UploadFile = File(...)):
             "original_filename": video.filename,
             "saved_video_name": saved_video_name,
             "video_url": f"/uploads/{saved_video_name}",
-            "checked_on": datetime.now().strftime("%d %b %Y, %I:%M %p"),
-            "poster_generated": False,
+            "checked_on": datetime.now().strftime("%d %b %Y"),
         }
 
         (RECORDS_DIR / f"{unique_id}.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
@@ -105,7 +103,7 @@ async def predict_endpoint(video: UploadFile = File(...)):
 
 
 @app.post("/generate-poster")
-async def create_poster_endpoint(payload: PosterRequest):
+async def generate_poster_endpoint(payload: PosterRequest):
     record_path = RECORDS_DIR / f"{payload.analysis_id}.json"
     if not record_path.exists():
         raise HTTPException(status_code=404, detail="Analysis record not found.")
@@ -116,25 +114,22 @@ async def create_poster_endpoint(payload: PosterRequest):
         raise HTTPException(status_code=404, detail="Uploaded video file not found.")
 
     host_ip = get_local_ip()
-    # QR code opens watch.html with this video's analysis ID
     watch_url = f"http://{host_ip}:8000/pages/watch.html?id={payload.analysis_id}"
 
-    poster_assets = generate_poster(
+    assets = generate_poster(
         video_path=str(saved_video_path),
         analysis_result=record,
-        watch_url=watch_url,
+        video_url=watch_url,
         unique_id=payload.analysis_id,
     )
 
-    record.update(poster_assets)
-    record["poster_generated"] = True
+    record.update(assets)
     record_path.write_text(json.dumps(record, indent=2), encoding="utf-8")
-
     return record
 
 
 @app.get("/analysis/{analysis_id}")
-async def get_analysis(analysis_id: str):
+async def get_analysis_endpoint(analysis_id: str):
     record_path = RECORDS_DIR / f"{analysis_id}.json"
     if not record_path.exists():
         raise HTTPException(status_code=404, detail="Analysis record not found.")
