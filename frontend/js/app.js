@@ -114,41 +114,4 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
-  //quiz
-    const quizRound = document.getElementById("quiz-round");
-    const quizCorrect = document.getElementById("quiz-correct");
-    const quizWrong = document.getElementById("quiz-wrong");
-    const quizNext = document.getElementById("quiz-next");
-
-    if (quizRound) {
-        const quizCards = quizRound.querySelectorAll(".quiz-card");
-        const quizDetectLink = document.querySelector("#quiz a[href*='main.html']");
-
-        quizCards.forEach((card) => {
-            card.addEventListener("click", () => {
-                const isReal = card.dataset.correct === "true";
-
-                quizCards.forEach((btn) => {
-                    btn.disabled = true;
-                });
-
-                quizCorrect.hidden = !isReal;
-                quizWrong.hidden = isReal;
-                quizNext.hidden = false;
-                if (quizDetectLink) quizDetectLink.hidden = false;
-            });
-        });
-
-        if (quizNext) {
-            quizNext.addEventListener("click", () => {
-                quizCards.forEach((btn) => {
-                    btn.disabled = false;
-                });
-                quizCorrect.hidden = true;
-                quizWrong.hidden = true;
-                quizNext.hidden = true;
-            });
-        }
-    }
 });
