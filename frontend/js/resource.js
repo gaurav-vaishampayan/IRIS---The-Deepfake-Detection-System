@@ -1,8 +1,7 @@
 console.log("IRIS resources.js active");
 
 const IMAGE_POOL = [
-  "../assets/images/pexels-merlin-14314636.jpg",
-  "../assets/images/download (4).jpg"
+  "../assets/images/pexels-merlin-14314636.jpg"
 ];
 
 const FALLBACK_RESOURCES = {
