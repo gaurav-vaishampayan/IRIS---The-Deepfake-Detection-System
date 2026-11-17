@@ -6,3 +6,4 @@ __pycache__/
 # Runtime test uploads & generated posters
 deepfake_backend/uploads/*
 deepfake_backend/posters/*
+deepfake_backend/records/*
