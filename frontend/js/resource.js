@@ -1,10 +1,10 @@
-// Add more image filenames from frontend/assets/images/ here as you add them
+console.log("IRIS resources.js active");
+
 const IMAGE_POOL = [
   "../assets/images/pexels-merlin-14314636.jpg",
   "../assets/images/download (4).jpg"
 ];
 
-// Offline/API fallback pool so cards never appear blank
 const FALLBACK_RESOURCES = {
   news: [
     { title: "Global Regulators Enforce Mandatory Watermarking for Synthetic AI Video", url: "https://c2pa.org/", source: "Tech News", date: "2026" },
@@ -36,7 +36,6 @@ const FALLBACK_RESOURCES = {
   ]
 };
 
-// Fisher-Yates shuffle to pick random items on every page reload
 function pickRandom(items, count = 5) {
   const arr = [...items];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -46,26 +45,6 @@ function pickRandom(items, count = 5) {
   return arr.slice(0, count);
 }
 
-// Fetch 25 recent arXiv deepfake papers and pick 5 random ones on refresh
-async function fetchLiveResearches() {
-  const query = encodeURIComponent('all:"deepfake detection" OR all:"face forgery detection"');
-  const url = `https://export.arxiv.org/api/query?search_query=${query}&sortBy=submittedDate&sortOrder=descending&max_results=25`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("arXiv fetch failed");
-
-  const xmlText = await res.text();
-  const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-  const entries = Array.from(xml.querySelectorAll("entry")).map(entry => ({
-    title: entry.querySelector("title")?.textContent.trim().replace(/\s+/g, " "),
-    url: entry.querySelector("id")?.textContent.trim(),
-    source: "arXiv",
-    date: entry.querySelector("published")?.textContent.slice(0, 10)
-  }));
-
-  return entries.length >= 5 ? pickRandom(entries, 5) : pickRandom(FALLBACK_RESOURCES.research, 5);
-}
-
-// Fetch 30 stories from Hacker News Algolia API and pick 5 random ones on refresh
 async function fetchLiveHN(query, label, fallbackKey) {
   const url = `https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(query)}&tags=story&hitsPerPage=30`;
   const res = await fetch(url);
@@ -78,33 +57,20 @@ async function fetchLiveHN(query, label, fallbackKey) {
       title: hit.title,
       url: hit.url,
       source: label,
-      date: hit.created_at?.slice(0, 10) || "2026"
+      date: hit.created_at ? hit.created_at.slice(0, 10) : "2026"
     }));
 
   return validHits.length >= 5 ? pickRandom(validHits, 5) : pickRandom(FALLBACK_RESOURCES[fallbackKey], 5);
 }
 
-// Assign distinct images across the 5 cards in a section without repeating back-to-back
-function getSectionImages(count = 5) {
-  const images = [];
-  for (let i = 0; i < count; i++) {
-    images.push(IMAGE_POOL[Math.floor(Math.random() * IMAGE_POOL.length)]);
-  }
-  return images;
-}
-
-// Update .main-card and .secondary-cards images + links
 function populateSection(sectionId, items) {
   const section = document.getElementById(sectionId);
   if (!section || !items.length) return;
 
-  const sectionImages = getSectionImages(5);
-
-  // 1. Update .main-card
   const mainImg = section.querySelector(".main-card img");
   const mainLink = section.querySelector(".main-card a");
   if (mainImg && items[0]) {
-    mainImg.src = items[0].image || sectionImages[0];
+    mainImg.src = IMAGE_POOL[Math.floor(Math.random() * IMAGE_POOL.length)];
     mainImg.alt = items[0].title;
   }
   if (mainLink && items[0]) {
@@ -112,10 +78,8 @@ function populateSection(sectionId, items) {
     mainLink.target = "_blank";
     mainLink.rel = "noopener noreferrer";
     mainLink.textContent = items[0].title;
-    mainLink.title = `${items[0].source} (${items[0].date})`;
   }
 
-  // 2. Update the 4 .secondary-cards
   const secondaryCards = section.querySelectorAll(".secondary-cards");
   secondaryCards.forEach((card, idx) => {
     const img = card.querySelector("img");
@@ -124,7 +88,7 @@ function populateSection(sectionId, items) {
     if (!item) return;
 
     if (img) {
-      img.src = item.image || sectionImages[idx + 1];
+      img.src = IMAGE_POOL[Math.floor(Math.random() * IMAGE_POOL.length)];
       img.alt = item.title;
     }
     if (link) {
@@ -132,25 +96,29 @@ function populateSection(sectionId, items) {
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       link.textContent = item.title;
-      link.title = `${item.source} (${item.date})`;
     }
   });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  if (!document.querySelector(".resource-sect")) return;
+async function initResources() {
+  const sectionIds = ["news", "research", "blogs", "case-studies"];
 
+  // 1. Immediately populate shuffled curated items so placeholders disappear right away
+  sectionIds.forEach(id => populateSection(id, pickRandom(FALLBACK_RESOURCES[id], 5)));
+
+  // 2. Fetch live stories from Hacker News Algolia API (supports CORS in all browsers)
   const results = await Promise.allSettled([
     fetchLiveHN("deepfake", "News", "news"),
-    fetchLiveResearches(),
+    fetchLiveHN("deepfake detection paper arxiv", "Research", "research"),
     fetchLiveHN("computer vision forensics synthetic media", "Blog", "blogs"),
     fetchLiveHN("deepfake scam impersonation fraud", "Case Study", "case-studies")
   ]);
 
-  const sectionIds = ["news", "research", "blogs", "case-studies"];
   results.forEach((result, i) => {
-    const id = sectionIds[i];
-    const items = result.status === "fulfilled" ? result.value : pickRandom(FALLBACK_RESOURCES[id], 5);
-    populateSection(id, items);
+    if (result.status === "fulfilled") {
+      populateSection(sectionIds[i], result.value);
+    }
   });
-});
+}
+
+initResources();
