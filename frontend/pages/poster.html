@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRIS - Verification poster</title>
+    <link rel="icon" href="../assets/images/download (4).jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/poster_style.css">
+</head>
+<body class="poster-page">
+    
+    <!-- 1. The hidden checkbox that controls the entire page state -->
+    <input type="checkbox" id="verdict-switch" class="hidden-switch">
+
+    <main class="poster" id="poster">
+
+        <header class="poster-head">
+            <a class="brand" href="landing_page.html">
+                <img src="../assets/images/download (4).jpg" alt="">
+                <span>IRIS</span>
+            </a>
+            
+            <!-- 2. The clickable label that toggles the checkbox -->
+            <label for="verdict-switch" class="toggle-btn">Toggle Result Demo</label>
+        </header>
+
+        <section>
+            <h1 class="poster-title">This video was flagged as 
+                <!-- Text elements flip based on checkbox state -->
+                <em class="content-fake">fake</em>
+                <em class="content-real">real</em>
+            </h1>
+            <p class="poster-sub content-fake">IRIS checked it frame by frame for face blending, texture and motion errors.</p>
+            <p class="poster-sub content-real">IRIS checked this video frame by frame and found no clear signs of manipulation.</p>
+        </section>
+
+        <!-- Thumbnail of the analysed video + stamp -->
+        <div class="poster-frame">
+            <img src="../uploads/thumbnail.jpg" alt="Frame from the analysed video" id="p-thumb">
+            <div class="watermark" aria-hidden="true">
+                <span class="content-fake">FAKE</span>
+                <span class="content-real">REAL</span>
+            </div>
+        </div>
+
+        <footer class="poster-foot">
+            <section class="result" aria-label="Detection result">
+                <h2>IRIS verdict: 
+                    <b class="content-fake">Fake</b>
+                    <b class="content-real">Real</b>
+                </h2>
+                <div class="score">
+                    <!-- Fake Score Row -->
+                    <div class="score-row content-fake"><span>Fake score</span><span>0.91</span></div>
+                    <div class="score-row content-real"><span>Fake score</span><span>0.09</span></div>
+                    
+                    <div class="meter content-fake"><span class="m-fake" style="--p:91%"></span></div>
+                    <div class="meter content-real"><span class="m-fake" style="--p:9%"></span></div>
+                    
+                    <!-- Real Score Row -->
+                    <div class="score-row content-fake"><span>Real score</span><span>0.09</span></div>
+                    <div class="score-row content-real"><span>Real score</span><span>0.91</span></div>
+                    
+                    <div class="meter content-fake"><span class="m-real" style="--p:9%"></span></div>
+                    <div class="meter content-real"><span class="m-real" style="--p:91%"></span></div>
+                </div>
+                <p class="result-meta">
+                    <span>30</span> frames analysed<br>
+                    File: <span>sample_video.mp4</span>
+                </p>
+            </section>
+
+            <aside class="qr-card">
+                <img src="../uploads/qr.png" alt="QR code to watch the video">
+                <p>Scan to watch the video and read the details</p>
+            </aside>
+        </footer>
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRIS - Watch and verify</title>
+    <link rel="icon" href="../assets/images/download (4).jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/poster_style.css">
+</head>
+<body>
+    
+    <!-- 1. The hidden checkbox that controls the entire page state -->
+    <input type="checkbox" id="verdict-switch" class="hidden-switch">
+
+    <main class="watch">
+        <header class="watch-head" style="display: flex; justify-content: space-between; align-items: center;">
+            <a class="brand" href="css\poster_style.css">
+                <img src="../assets/images/download (4).jpg" alt="">
+                <span>IRIS</span>
+            </a>
+            
+            <!-- 2. The clickable label that toggles the checkbox -->
+            <label for="verdict-switch" class="toggle-btn">Toggle Result Demo</label>
+        </header>
+
+        <div class="watch-grid">
+            <div class="player">
+                <video controls playsinline preload="metadata" poster="../uploads/thumbnail.jpg">
+                    <source src="../uploads/sample_video.mp4" type="video/mp4">
+                    Your browser can't play this video.
+                </video>
+                <div class="watermark" aria-hidden="true">
+                    <span class="content-fake">FAKE</span>
+                    <span class="content-real">REAL</span>
+                </div>
+            </div>
+
+            <section class="about" aria-labelledby="w-title">
+                <h1 id="w-title">IRIS found this video to be 
+                    <b class="content-fake">fake</b>
+                    <b class="content-real">real</b>
+                </h1>
+                
+                <p class="content-fake">IRIS checked this video frame by frame and found face blending and motion errors that real footage doesn't show. Treat it as fake until you can confirm where it came from.</p>
+                <p class="content-real">IRIS checked this video frame by frame and found no clear signs of manipulation. That doesn't prove it is genuine, so confirm the source before you rely on it.</p>
+
+                <div class="score">
+                    <!-- Fake Score Row -->
+                    <div class="score-row content-fake"><span>Fake score</span><span>0.91</span></div>
+                    <div class="score-row content-real"><span>Fake score</span><span>0.09</span></div>
+                    
+                    <div class="meter content-fake"><span class="m-fake" style="--p:91%"></span></div>
+                    <div class="meter content-real"><span class="m-fake" style="--p:9%"></span></div>
+                    
+                    <!-- Real Score Row -->
+                    <div class="score-row content-fake"><span>Real score</span><span>0.09</span></div>
+                    <div class="score-row content-real"><span>Real score</span><span>0.91</span></div>
+                    
+                    <div class="meter content-fake"><span class="m-real" style="--p:9%"></span></div>
+                    <div class="meter content-real"><span class="m-real" style="--p:91%"></span></div>
+                </div>
+
+                <dl>
+                    <dt>Frames analysed</dt><dd>30</dd>
+                    <dt>Checked on</dt><dd>17 Nov 2026</dd>
+                    <dt>File</dt><dd>sample_video.mp4</dd>
+                </dl>
+
+                <p class="note">IRIS gives a probability, not proof. A wrong result can hurt real people, so check the source before you share it.</p>
+                <a class="btn" href="main.html">Check your own video</a>
+            </section>
+        </div>
+    </main>
+    
+    <!-- All JavaScript has been successfully deleted! -->
+</body>
+</html>
