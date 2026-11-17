@@ -18,18 +18,19 @@
     <main class="poster" id="poster">
 
         <header class="poster-head">
-            <a class="brand" href="landing_page.html">
+            <a class="brand" href="../index.html">
                 <img src="../assets/images/download (4).jpg" alt="">
                 <span>IRIS</span>
             </a>
             
-            <!-- 2. The clickable label that toggles the checkbox -->
-            <label for="verdict-switch" class="toggle-btn">Toggle Result Demo</label>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a id="download-poster-btn" class="btn" href="#" download="IRIS_Poster.png" hidden>Download PNG</a>
+                <label for="verdict-switch" class="toggle-btn">Toggle Result Demo</label>
+            </div>
         </header>
 
         <section>
             <h1 class="poster-title">This video was flagged as 
-                <!-- Text elements flip based on checkbox state -->
                 <em class="content-fake">fake</em>
                 <em class="content-real">real</em>
             </h1>
@@ -80,5 +81,52 @@
         </footer>
 
     </main>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const analysisId = new URLSearchParams(window.location.search).get("id");
+        if (!analysisId) return;
+
+        try {
+            const res = await fetch(`/analysis/${encodeURIComponent(analysisId)}`);
+            if (!res.ok) return;
+            const data = await res.json();
+
+            const switchEl = document.getElementById("verdict-switch");
+            if (switchEl) switchEl.checked = String(data.prediction).toUpperCase() === "REAL";
+
+            if (data.thumbnail_url) document.getElementById("p-thumb").src = data.thumbnail_url;
+            const qrImg = document.querySelector(".qr-card img");
+            if (qrImg && data.qr_url) qrImg.src = data.qr_url;
+
+            const fakeScore = Number(data.fake_probability || 0).toFixed(2);
+            const realScore = Number(data.real_probability || 0).toFixed(2);
+            const fakePct = `${Math.round(Number(data.fake_probability || 0) * 100)}%`;
+            const realPct = `${Math.round(Number(data.real_probability || 0) * 100)}%`;
+
+            document.querySelectorAll(".score-row").forEach((row) => {
+                const label = row.children[0].textContent.trim();
+                row.children[1].textContent = label === "Fake score" ? fakeScore : realScore;
+            });
+            document.querySelectorAll(".meter .m-fake").forEach((el) => el.style.setProperty("--p", fakePct));
+            document.querySelectorAll(".meter .m-real").forEach((el) => el.style.setProperty("--p", realPct));
+
+            const metaSpans = document.querySelectorAll(".result-meta span");
+            if (metaSpans.length >= 2) {
+                metaSpans[0].textContent = data.frames_analyzed || 30;
+                metaSpans[1].textContent = data.original_filename || data.saved_video_name;
+            }
+
+            const dlBtn = document.getElementById("download-poster-btn");
+            if (dlBtn && data.poster_url) {
+                dlBtn.href = data.poster_url;
+                dlBtn.download = `IRIS_${data.prediction}_${analysisId}.png`;
+                dlBtn.hidden = false;
+            }
+        } catch (err) {
+            console.error("Failed to load poster data:", err);
+        }
+    });
+    </script>
 </body>
 </html>

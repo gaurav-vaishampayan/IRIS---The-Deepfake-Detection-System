@@ -15,7 +15,7 @@
     <main>
         <!-- navigation -->
         <nav class="nav-links nav-right" aria-label="Main">
-            <a href="./index.html">Home</a>
+            <a href="../index.html">Home</a>
             <a href="./tech.html">Technology</a>
             <a href="./resource.html">Resources</a>
             <a href="./about_us.html">About Us</a>
@@ -31,14 +31,7 @@
                 <span class="ellipse e5"></span>
                 <span class="ellipse e6"></span>
             </div>
-            <!-- Results Section required by app.js -->
-<section id="results" hidden style="margin-top: 30px; padding: 20px; background: #1e1e1e; border-radius: 12px; color: #fff; text-align: center;">
-    <h2>Analysis Results</h2>
-    <p id="verdict" style="font-size: 1.5rem; font-weight: bold; margin: 15px 0;"></p>
-    <p id="confidence-graph" style="font-size: 1rem; color: #aaa;"></p>
-</section>
 
-     
             <!-- logo -->
             <div class="content">
                 <div class="logo">
@@ -76,17 +69,25 @@
                 </div>
             </div>
         </section>
+
+        <!-- result section : hidden -->
         <section class="results" id="results" aria-labelledby="results-title" hidden>
-    <h2 class="results-title" id="results-title">Results</h2>
-    <div class="results-grid">
-        <p id="verdict">Extracting frames and analyzing facial features...</p>
-        <p id="confidence-graph">Waiting for model scores...</p>
-    </div>
-</section>
+            <h2 class="results-title" id="results-title">Results</h2>
+            <div class="results-grid">
+                <p id="verdict">Extracting frames and analyzing facial features...</p>
+                <p id="confidence-graph">Waiting for model scores...</p>
+            </div>
 
-        <!-- result section : hidden -->
-        <!-- result section : hidden -->
-
+            <!-- User choice to generate verification poster -->
+            <div id="poster-prompt" hidden style="margin-top: 24px; padding: 20px; border-radius: 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); text-align: center;">
+                <p style="margin-bottom: 14px; font-size: 1.05rem;">Do you want to generate a verification poster (with first frame, QR code, and result)?</p>
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    <button type="button" class="upload-btn" id="btn-generate-poster">Yes, Generate Poster</button>
+                    <button type="button" class="upload-btn" id="btn-skip-poster" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.35);">No, Thanks</button>
+                </div>
+                <p id="poster-status" style="margin-top: 10px; font-size: 0.9rem; color: #a9a9ae;"></p>
+            </div>
+        </section>
     </main>
 
     <!-- footer section -->

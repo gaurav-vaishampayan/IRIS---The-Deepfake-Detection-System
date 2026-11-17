@@ -1,5 +1,6 @@
-// Update the port if your backend runs on 5000 instead of FastAPI's default 8000
-const API = "http://127.0.0.1:8000";
+const API = window.location.origin.startsWith("http")
+    ? window.location.origin
+    : "http://127.0.0.1:8000";
 
 async function request(path, options = {}) {
     const res = await fetch(API + path, options);
@@ -11,7 +12,6 @@ async function request(path, options = {}) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-   //upload
     const uploadForm = document.getElementById("upload-form");
     const dropzone = document.getElementById("dropzone");
     const videoInput = document.getElementById("video");
@@ -20,6 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const resultsSection = document.getElementById("results");
     const verdictOutput = document.getElementById("verdict");
     const confidenceOutput = document.getElementById("confidence-graph");
+
+    const posterPrompt = document.getElementById("poster-prompt");
+    const btnGeneratePoster = document.getElementById("btn-generate-poster");
+    const btnSkipPoster = document.getElementById("btn-skip-poster");
+    const posterStatus = document.getElementById("poster-status");
+
+    let currentAnalysisId = null;
 
     if (uploadForm && videoInput) {
         const updateSelectedFile = (file) => {
@@ -32,12 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        // File picker selection
         videoInput.addEventListener("change", () => {
             updateSelectedFile(videoInput.files[0]);
         });
 
-        // Drag-and-drop support on the dropzone label
         if (dropzone) {
             dropzone.addEventListener("dragover", (e) => {
                 e.preventDefault();
@@ -60,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // Submit video to backend API
         uploadForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
@@ -73,15 +77,17 @@ document.addEventListener("DOMContentLoaded", () => {
             uploadBtn.disabled = true;
             uploadBtn.textContent = "Analyzing...";
             resultsSection.hidden = false;
+            if (posterPrompt) posterPrompt.hidden = true;
             verdictOutput.textContent = "Extracting frames and analyzing facial features...";
             confidenceOutput.textContent = "Waiting for model scores...";
 
             try {
-                // Ensure "/predict" matches your FastAPI @app.post(...) route
                 const data = await request("/predict", {
                     method: "POST",
                     body: formData,
                 });
+
+                currentAnalysisId = data.analysis_id;
 
                 const verdict = data.verdict || data.prediction || "Analysis Complete";
                 const confidence =
@@ -90,9 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         : "";
 
                 verdictOutput.textContent = `${verdict}${confidence}`;
-                
-                // Automatically scroll down smoothly to the results section
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
+                resultsSection.scrollIntoView({ behavior: "smooth" });
 
                 if (Array.isArray(data.frame_scores) && data.frame_scores.length > 0) {
                     confidenceOutput.textContent =
@@ -102,6 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     confidenceOutput.textContent = data.message;
                 } else {
                     confidenceOutput.textContent = "Frame-level analysis completed.";
+                }
+
+                if (posterPrompt && currentAnalysisId) {
+                    posterPrompt.hidden = false;
+                    posterStatus.textContent = "";
+                    btnGeneratePoster.disabled = false;
+                    btnGeneratePoster.textContent = "Yes, Generate Poster";
                 }
             } catch (err) {
                 console.error("Detection request failed:", err);
@@ -113,5 +124,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 uploadBtn.textContent = "Upload";
             }
         });
+
+        if (btnGeneratePoster) {
+            btnGeneratePoster.addEventListener("click", async () => {
+                if (!currentAnalysisId) return;
+
+                btnGeneratePoster.disabled = true;
+                btnGeneratePoster.textContent = "Generating...";
+                posterStatus.textContent = "Creating poster with first frame and QR code...";
+
+                try {
+                    await request("/generate-poster", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ analysis_id: currentAnalysisId }),
+                    });
+                    window.location.href = `./poster.html?id=${encodeURIComponent(currentAnalysisId)}`;
+                } catch (err) {
+                    console.error("Poster generation failed:", err);
+                    posterStatus.textContent = "Could not generate poster. Please try again.";
+                    btnGeneratePoster.disabled = false;
+                    btnGeneratePoster.textContent = "Yes, Generate Poster";
+                }
+            });
+        }
+
+        if (btnSkipPoster) {
+            btnSkipPoster.addEventListener("click", () => {
+                posterPrompt.hidden = true;
+            });
+        }
     }
 });

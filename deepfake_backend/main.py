@@ -1,22 +1,27 @@
 import os
 import sys
+import json
 import shutil
 import socket
 import uuid
 import tempfile
+from datetime import datetime
 from pathlib import Path
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from pydantic import BaseModel
 
 CURRENT_DIR = Path(__file__).resolve().parent
 BASE_DIR = CURRENT_DIR.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
 
-# Folders to store uploaded videos (for the QR code) and generated posters
 UPLOAD_DIR = CURRENT_DIR / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+RECORDS_DIR = CURRENT_DIR / "records"
+RECORDS_DIR.mkdir(parents=True, exist_ok=True)
 
 if str(CURRENT_DIR) not in sys.path:
     sys.path.insert(0, str(CURRENT_DIR))
@@ -35,6 +40,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+class PosterRequest(BaseModel):
+    analysis_id: str
 
 
 def get_local_ip() -> str:
@@ -62,30 +71,32 @@ async def predict_endpoint(video: UploadFile = File(...)):
     try:
         result = analyze_video(tmp_path)
 
-        # Save a copy of the video in /uploads so the QR code link can play it
         unique_id = uuid.uuid4().hex[:8]
         saved_video_name = f"vid_{unique_id}{suffix}"
         saved_video_path = UPLOAD_DIR / saved_video_name
         shutil.copy2(tmp_path, saved_video_path)
 
-        host_ip = get_local_ip()
-        video_qr_url = f"http://{host_ip}:8000/uploads/{saved_video_name}"
-        poster_filename = f"poster_{unique_id}.png"
+        # Normalize fields so frontend and poster always have consistent keys
+        prediction = str(result.get("prediction") or result.get("verdict") or "REAL").upper()
+        fake_prob = float(result.get("fake_probability", result.get("confidence", 0.0) if prediction == "FAKE" else 0.0))
+        real_prob = float(result.get("real_probability", 1.0 - fake_prob))
 
-        # Generate the poster with the QR code and model verdict
-        generate_poster(
-            video_path=str(saved_video_path),
-            analysis_result=result,
-            video_url=video_qr_url,
-            output_filename=poster_filename
-        )
+        record = {
+            **result,
+            "analysis_id": unique_id,
+            "prediction": prediction,
+            "fake_probability": round(fake_prob, 4),
+            "real_probability": round(real_prob, 4),
+            "frames_analyzed": result.get("frames_analyzed", 30),
+            "original_filename": video.filename,
+            "saved_video_name": saved_video_name,
+            "video_url": f"/uploads/{saved_video_name}",
+            "checked_on": datetime.now().strftime("%d %b %Y, %I:%M %p"),
+            "poster_generated": False,
+        }
 
-       #ui for poster
-        result["video_url"] = f"/uploads/{saved_video_name}"
-        result["poster_url"] = f"/posters/{poster_filename}"
-        result["poster_full_url"] = f"http://{host_ip}:8000/posters/{poster_filename}"
-
-        return result
+        (RECORDS_DIR / f"{unique_id}.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
+        return record
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
@@ -93,7 +104,43 @@ async def predict_endpoint(video: UploadFile = File(...)):
             os.remove(tmp_path)
 
 
-# Directly land on frontend/index.html when visiting http://127.0.0.1:8000/
+@app.post("/generate-poster")
+async def create_poster_endpoint(payload: PosterRequest):
+    record_path = RECORDS_DIR / f"{payload.analysis_id}.json"
+    if not record_path.exists():
+        raise HTTPException(status_code=404, detail="Analysis record not found.")
+
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    saved_video_path = UPLOAD_DIR / record["saved_video_name"]
+    if not saved_video_path.exists():
+        raise HTTPException(status_code=404, detail="Uploaded video file not found.")
+
+    host_ip = get_local_ip()
+    # QR code opens watch.html with this video's analysis ID
+    watch_url = f"http://{host_ip}:8000/pages/watch.html?id={payload.analysis_id}"
+
+    poster_assets = generate_poster(
+        video_path=str(saved_video_path),
+        analysis_result=record,
+        watch_url=watch_url,
+        unique_id=payload.analysis_id,
+    )
+
+    record.update(poster_assets)
+    record["poster_generated"] = True
+    record_path.write_text(json.dumps(record, indent=2), encoding="utf-8")
+
+    return record
+
+
+@app.get("/analysis/{analysis_id}")
+async def get_analysis(analysis_id: str):
+    record_path = RECORDS_DIR / f"{analysis_id}.json"
+    if not record_path.exists():
+        raise HTTPException(status_code=404, detail="Analysis record not found.")
+    return json.loads(record_path.read_text(encoding="utf-8"))
+
+
 @app.get("/")
 async def serve_index():
     return FileResponse(FRONTEND_DIR / "index.html")
@@ -104,9 +151,6 @@ async def serve_index_explicit():
     return FileResponse(FRONTEND_DIR / "index.html")
 
 
-# Serve uploaded videos and generated posters (must be mounted BEFORE "/")
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 app.mount("/posters", StaticFiles(directory=str(POSTER_DIR)), name="posters")
-
-# Serve all static frontend files (/pages/main.html, /css/*, /js/*, /assets/*)
 app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

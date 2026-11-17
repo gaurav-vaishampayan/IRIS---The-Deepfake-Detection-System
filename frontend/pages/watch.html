@@ -17,7 +17,7 @@
 
     <main class="watch">
         <header class="watch-head" style="display: flex; justify-content: space-between; align-items: center;">
-            <a class="brand" href="css\poster_style.css">
+            <a class="brand" href="../index.html">
                 <img src="../assets/images/download (4).jpg" alt="">
                 <span>IRIS</span>
             </a>
@@ -74,7 +74,49 @@
             </section>
         </div>
     </main>
-    
-    <!-- All JavaScript has been successfully deleted! -->
+
+    <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const analysisId = new URLSearchParams(window.location.search).get("id");
+        if (!analysisId) return;
+
+        try {
+            const res = await fetch(`/analysis/${encodeURIComponent(analysisId)}`);
+            if (!res.ok) return;
+            const data = await res.json();
+
+            const switchEl = document.getElementById("verdict-switch");
+            if (switchEl) switchEl.checked = String(data.prediction).toUpperCase() === "REAL";
+
+            const videoEl = document.querySelector(".player video");
+            if (videoEl && data.video_url) {
+                if (data.thumbnail_url) videoEl.poster = data.thumbnail_url;
+                videoEl.src = data.video_url;
+                videoEl.load();
+            }
+
+            const fakeScore = Number(data.fake_probability || 0).toFixed(2);
+            const realScore = Number(data.real_probability || 0).toFixed(2);
+            const fakePct = `${Math.round(Number(data.fake_probability || 0) * 100)}%`;
+            const realPct = `${Math.round(Number(data.real_probability || 0) * 100)}%`;
+
+            document.querySelectorAll(".score-row").forEach((row) => {
+                const label = row.children[0].textContent.trim();
+                row.children[1].textContent = label === "Fake score" ? fakeScore : realScore;
+            });
+            document.querySelectorAll(".meter .m-fake").forEach((el) => el.style.setProperty("--p", fakePct));
+            document.querySelectorAll(".meter .m-real").forEach((el) => el.style.setProperty("--p", realPct));
+
+            const dds = document.querySelectorAll(".about dl dd");
+            if (dds.length >= 3) {
+                dds[0].textContent = data.frames_analyzed || 30;
+                dds[1].textContent = data.checked_on || "";
+                dds[2].textContent = data.original_filename || data.saved_video_name;
+            }
+        } catch (err) {
+            console.error("Failed to load watch data:", err);
+        }
+    });
+    </script>
 </body>
 </html>
