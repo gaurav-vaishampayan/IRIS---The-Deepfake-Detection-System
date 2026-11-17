@@ -80,7 +80,7 @@ async def predict_endpoint(video: UploadFile = File(...)):
             output_filename=poster_filename
         )
 
-        # Attach poster and video links to the JSON response for your friend's UI
+       #ui for poster
         result["video_url"] = f"/uploads/{saved_video_name}"
         result["poster_url"] = f"/posters/{poster_filename}"
         result["poster_full_url"] = f"http://{host_ip}:8000/posters/{poster_filename}"

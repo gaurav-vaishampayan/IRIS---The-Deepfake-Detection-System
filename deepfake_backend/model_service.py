@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent
 WEIGHTS_PATH = BASE_DIR / "weights" / "best_deepfake_model.pth"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-print(f"🔍 Target Model Path: {WEIGHTS_PATH}")
+print(f" Target Model Path: {WEIGHTS_PATH}")
 if WEIGHTS_PATH.exists():
     file_size_mb = WEIGHTS_PATH.stat().st_size / (1024 * 1024)
     print(f" Weights File Size: {file_size_mb:.2f} MB")
