@@ -18,11 +18,17 @@ IRIS is a hybrid spatial-temporal detector. The spatial branch checks each face 
 5. Output: the backend returns the Real/Fake verdict, the confidence, a per-frame score plot.
 
 ##Objectives
+<Br>
 •	Build a binary classifier (real vs. fake) for face images and video using transfer learning on a pretrained CNN or transformer backbone.
+<Br>
 •	Implement a full pipeline: frame extraction, face detection and cropping, per-frame inference, score aggregation and verdict.
+<Br>
 •	Evaluate with AUC, precision, recall, F1 and a confusion matrix, using video-level data splits to prevent leakage.
+<Br>
 •	Deliver a web interface that accepts an uploaded video or image and returns the verdict, score and heatmap.
+<br>
 •	Measure cross-dataset generalization (train on one dataset, test on another) and report the drop.
+<br>
 •	Compare against existing tools and published baselines, and document limitations and ethical considerations.
 
 
